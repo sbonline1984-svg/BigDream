@@ -1,1 +1,550 @@
-# BigDream
+<!DOCTYPE html>
+<html lang="as">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Big Dream — শিশুৰ পত্ৰিকা</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     BIG DREAM — Children's Digital Magazine
+     Edit content inside sections marked <!-- EDIT: ... --> below.
+     Colours, fonts and shapes are controlled by the variables here.
+     ============================================================ */
+
+  :root{
+    --sun:        #FFD54A;   /* sunny yellow   */
+    --sky:        #6EC3FF;   /* sky blue       */
+    --coral:      #FF8FA3;   /* coral pink     */
+    --mint:       #7BDCB5;   /* mint green     */
+    --lavender:   #C6B6FF;   /* soft lavender  */
+    --cream:      #FFF9EE;   /* page bg        */
+    --paper:      #FFFDF8;   /* card bg        */
+    --ink:        #3A2B4D;   /* main text      */
+    --ink-soft:   #6B5A80;   /* secondary text */
+
+    --font-display: 'Baloo 2', system-ui, sans-serif;
+    --font-body:    'Quicksand', system-ui, sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0;
+    padding:0;
+    background:#E9E2F5;
+    font-family: var(--font-body);
+    color: var(--ink);
+  }
+
+  /* ---------- PAGE FRAME (A4-ish) ---------- */
+  .page{
+    position: relative;
+    width: 210mm;
+    min-height: 297mm;
+    max-width: 100%;
+    margin: 24px auto;
+    background: var(--cream);
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(58,43,77,0.18);
+    border-radius: 18px;
+    padding: 14mm 14mm 16mm;
+  }
+
+  @media print{
+    body{ background: #fff; }
+    .page{
+      margin: 0;
+      box-shadow: none;
+      border-radius: 0;
+      width: 210mm;
+      height: 297mm;
+      page-break-after: always;
+    }
+  }
+
+  @media (max-width: 780px){
+    .page{ padding: 8mm 7mm 10mm; border-radius: 0; margin: 0 0 16px; }
+  }
+
+  /* ---------- DECORATIVE SHAPES (background layer) ---------- */
+  .shape{ position:absolute; z-index:0; pointer-events:none; }
+
+  /* ---------- HEADER / LOGO ---------- */
+  .masthead{
+    position: relative;
+    z-index: 2;
+    text-align:center;
+    padding-top: 6mm;
+  }
+  .masthead .kicker{
+    font-family: var(--font-body);
+    font-weight:700;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    font-size: 14px;
+    margin: 0 0 6px;
+  }
+  .logo-title{
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(56px, 10vw, 92px);
+    line-height: 1;
+    margin: 0;
+    display: inline-block;
+    position: relative;
+    color: var(--coral);
+    -webkit-text-stroke: 3px var(--ink);
+    text-shadow: 4px 5px 0 var(--sun);
+    transform: rotate(-2deg);
+  }
+  .masthead .tagline{
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--ink-soft);
+    font-size: 17px;
+    margin-top: 10px;
+  }
+
+  .mini-logo{
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 26px;
+    color: var(--coral);
+    -webkit-text-stroke: 1.4px var(--ink);
+  }
+
+  /* ---------- GENERIC CARD ---------- */
+  .card{
+    position: relative;
+    z-index: 2;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    border-radius: 26px;
+    padding: 22px 24px;
+    box-shadow: 6px 6px 0 rgba(58,43,77,0.14);
+  }
+  .card h2{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 26px;
+    margin: 0 0 10px;
+    color: var(--ink);
+  }
+  .card p, .card li{
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--ink);
+    max-width: 62ch;
+  }
+  .badge-icon{
+    width: 46px; height: 46px;
+    display:inline-flex; align-items:center; justify-content:center;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 3px solid var(--ink);
+  }
+
+  /* ---------- COVER LAYOUT ---------- */
+  .cover-hero{
+    position: relative;
+    z-index: 2;
+    margin-top: 10mm;
+    display: flex;
+    justify-content: center;
+  }
+  .cover-illustration{ width: min(560px, 92%); height: auto; }
+
+  .cover-toc{
+    position: relative;
+    z-index: 2;
+    margin-top: 12mm;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .toc-item{
+    display:flex;
+    align-items:flex-start;
+    gap: 12px;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    border-radius: 20px;
+    padding: 14px 16px;
+    box-shadow: 5px 5px 0 rgba(58,43,77,0.12);
+  }
+  .toc-item .num{
+    font-family: var(--font-display);
+    font-weight:800;
+    font-size: 22px;
+    color: #fff;
+    background: var(--sky);
+    border: 2.5px solid var(--ink);
+    width: 34px; height:34px;
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    flex: none;
+  }
+  .toc-item h3{
+    margin:0 0 3px;
+    font-family: var(--font-display);
+    font-size: 16.5px;
+    color: var(--ink);
+  }
+  .toc-item p{
+    margin:0;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+
+  .cover-footer{
+    position: relative;
+    z-index: 2;
+    margin-top: 12mm;
+    text-align:center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- PAGE 2 LAYOUT ---------- */
+  .p2-header{
+    position: relative;
+    z-index: 2;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom: 3px dashed var(--ink);
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+  }
+  .p2-header .issue{
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  .content-grid{
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 6px;
+  }
+  @media (max-width: 700px){
+    .content-grid{ grid-template-columns: 1fr; }
+  }
+
+  .poem-card{ background: linear-gradient(180deg,#FFFDF8, #FFF3D9); }
+  .story-card{ background: linear-gradient(180deg,#FFFDF8, #E9F7FF); }
+
+  .poem-line{ margin: 0 0 6px; }
+
+  .fun-row{
+    position: relative;
+    z-index: 2;
+    display:grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 18px;
+    margin-top: 18px;
+  }
+  @media (max-width: 700px){
+    .fun-row{ grid-template-columns: 1fr; }
+  }
+
+  .fact-bubble{
+    background: var(--lavender);
+  }
+  .draw-box{
+    background: var(--mint);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .draw-frame{
+    margin-top: 8px;
+    width: 100%;
+    height: 90px;
+    background: #fff;
+    border: 3px dashed var(--ink);
+    border-radius: 14px;
+  }
+
+  .animal-strip{
+    position: relative;
+    z-index: 2;
+    margin-top: 18px;
+    display:flex;
+    align-items:flex-end;
+    justify-content: space-around;
+    gap: 6px;
+  }
+  .animal-strip svg{ width: 100%; height: auto; }
+  .animal-slot{ width: 18%; }
+
+  .p2-footer{
+    position: relative;
+    z-index: 2;
+    text-align:center;
+    margin-top: 16px;
+    font-weight:700;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+
+<!-- ======================================================================
+     PAGE 1 — COVER
+====================================================================== -->
+<section class="page" id="page-1">
+
+  <!-- decorative background shapes -->
+  <svg class="shape" style="top:-30px; left:-40px;" width="160" height="160" viewBox="0 0 160 160"><circle cx="80" cy="80" r="80" fill="#FFE9A8"/></svg>
+  <svg class="shape" style="top:40px; right:-50px;" width="180" height="180" viewBox="0 0 180 180"><circle cx="90" cy="90" r="90" fill="#D8F3E8"/></svg>
+  <svg class="shape" style="bottom:60px; left:-30px;" width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="70" fill="#FFE1E8"/></svg>
+  <svg class="shape" style="bottom:-40px; right:20px;" width="200" height="200" viewBox="0 0 200 200"><circle cx="100" cy="100" r="100" fill="#E3DAFB"/></svg>
+  <svg class="shape" style="top:130px; left:40px;" width="34" height="34" viewBox="0 0 24 24"><path d="M12 1l2.9 7.1L22 9l-5.5 4.9L18 22l-6-3.9L6 22l1.5-8.1L2 9l7.1-.9L12 1z" fill="var(--sun)" stroke="var(--ink)" stroke-width="1"/></svg>
+  <svg class="shape" style="top:250px; right:60px;" width="26" height="26" viewBox="0 0 24 24"><path d="M12 1l2.9 7.1L22 9l-5.5 4.9L18 22l-6-3.9L6 22l1.5-8.1L2 9l7.1-.9L12 1z" fill="var(--coral)" stroke="var(--ink)" stroke-width="1"/></svg>
+
+  <header class="masthead">
+    <p class="kicker">ছুটাৰ কথা কোৱা কল্পনাৰ পত্ৰিকা</p>
+    <h1 class="logo-title">Big Dream</h1>
+    <p class="tagline">সৰু সৰু মনৰ ডাঙৰ ডাঙৰ সপোনৰ বাবে ✨</p>
+  </header>
+
+  <!-- COVER HERO ILLUSTRATION -->
+  <div class="cover-hero">
+    <svg class="cover-illustration" viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- sky blob ground -->
+      <ellipse cx="280" cy="255" rx="260" ry="30" fill="#E9DFC9"/>
+      <!-- sun -->
+      <circle cx="470" cy="60" r="46" fill="var(--sun)" stroke="var(--ink)" stroke-width="3"/>
+      <g stroke="var(--ink)" stroke-width="3" stroke-linecap="round">
+        <line x1="470" y1="0" x2="470" y2="14"/>
+        <line x1="528" y1="60" x2="514" y2="60"/>
+        <line x1="512" y1="18" x2="503" y2="27"/>
+        <line x1="512" y1="102" x2="503" y2="93"/>
+      </g>
+      <!-- clouds -->
+      <g>
+        <ellipse cx="80" cy="55" rx="42" ry="22" fill="#fff" stroke="var(--ink)" stroke-width="3"/>
+        <ellipse cx="115" cy="45" rx="26" ry="18" fill="#fff" stroke="var(--ink)" stroke-width="3"/>
+        <ellipse cx="50" cy="45" rx="24" ry="16" fill="#fff" stroke="var(--ink)" stroke-width="3"/>
+      </g>
+      <g>
+        <ellipse cx="330" cy="35" rx="30" ry="16" fill="#fff" stroke="var(--ink)" stroke-width="2.5"/>
+        <ellipse cx="355" cy="28" rx="18" ry="12" fill="#fff" stroke="var(--ink)" stroke-width="2.5"/>
+      </g>
+
+      <!-- balloon -->
+      <ellipse cx="200" cy="90" rx="26" ry="32" fill="var(--coral)" stroke="var(--ink)" stroke-width="3"/>
+      <path d="M200 122 L200 150" stroke="var(--ink)" stroke-width="2"/>
+      <path d="M188 110 Q200 140 212 110" fill="none" stroke="var(--ink)" stroke-width="2"/>
+
+      <!-- little star trail -->
+      <path d="M240 70l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z" fill="var(--lavender)" stroke="var(--ink)" stroke-width="1.5"/>
+
+      <!-- ELEPHANT (walking, holding balloon string) -->
+      <g transform="translate(150,150)">
+        <ellipse cx="45" cy="98" rx="54" ry="10" fill="#00000012"/>
+        <path d="M10 40 Q0 10 35 5 Q80 -5 95 30 Q100 55 85 75 L85 90 L70 90 L70 78 L30 78 L30 90 L15 90 L15 72 Q0 60 10 40 Z"
+              fill="var(--sky)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M10 45 Q-14 55 -10 82 Q-6 92 4 88 Q0 65 12 55" fill="var(--sky)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="70" cy="28" r="4.5" fill="var(--ink)"/>
+        <ellipse cx="88" cy="34" rx="14" ry="10" fill="#fff" stroke="var(--ink)" stroke-width="2.5"/>
+        <path d="M20 20 Q35 5 55 15" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      </g>
+
+      <!-- BUTTERFLY -->
+      <g transform="translate(370,140)">
+        <path d="M0 0 C-18 -22 -34 -6 -20 6 C-34 18 -18 30 0 12" fill="var(--coral)" stroke="var(--ink)" stroke-width="2"/>
+        <path d="M0 0 C18 -22 34 -6 20 6 C34 18 18 30 0 12" fill="var(--sun)" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="0" y1="-4" x2="0" y2="16" stroke="var(--ink)" stroke-width="2.5"/>
+      </g>
+
+      <!-- little bird -->
+      <g transform="translate(30,150) scale(0.9)">
+        <path d="M0 10 Q10 -6 26 4 Q22 14 10 14 Q16 22 6 24 Q4 16 0 10Z" fill="var(--mint)" stroke="var(--ink)" stroke-width="2"/>
+        <circle cx="20" cy="5" r="2" fill="var(--ink)"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- TABLE OF CONTENTS -->
+  <!-- EDIT: change these four boxes to preview this issue's content -->
+  <div class="cover-toc">
+    <div class="toc-item">
+      <span class="num">1</span>
+      <div>
+        <h3>তৰাৰ কবিতা</h3>
+        <p>আকাশৰ তৰাক লৈ এটা মিঠা সৰু কবিতা।</p>
+      </div>
+    </div>
+    <div class="toc-item">
+      <span class="num">2</span>
+      <div>
+        <h3>সাহসী কচ্ছপৰ গল্প</h3>
+        <p>ধীৰে চলিও কেনেকৈ কচ্ছপয়ে সপোন পূৰ কৰিলে।</p>
+      </div>
+    </div>
+    <div class="toc-item">
+      <span class="num">3</span>
+      <div>
+        <h3>জানো নে তুমি?</h3>
+        <p>জিৰাফ আৰু পখিলাৰ মজাৰ তথ্য।</p>
+      </div>
+    </div>
+    <div class="toc-item">
+      <span class="num">4</span>
+      <div>
+        <h3>তোমাৰ সপোন আঁকা</h3>
+        <p>নিজৰ ডাঙৰ সপোনখন ছবি কৰি আঁকা।</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="cover-footer">সংখ্যা ১ &nbsp;•&nbsp; সৰু পঢ়ুৱৈসকলৰ বাবে প্ৰেমেৰে তৈয়াৰী 💛</p>
+</section>
+
+<!-- ======================================================================
+     PAGE 2 — CONTENT
+====================================================================== -->
+<section class="page" id="page-2">
+
+  <!-- decorative background shapes -->
+  <svg class="shape" style="top:-40px; right:-40px;" width="170" height="170" viewBox="0 0 170 170"><circle cx="85" cy="85" r="85" fill="#FFE9A8"/></svg>
+  <svg class="shape" style="bottom:-50px; left:-50px;" width="190" height="190" viewBox="0 0 190 190"><circle cx="95" cy="95" r="95" fill="#E3DAFB"/></svg>
+  <svg class="shape" style="top:300px; left:-20px;" width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="45" fill="#FFE1E8"/></svg>
+
+  <div class="p2-header">
+    <span class="mini-logo">Big Dream</span>
+    <span class="issue">সংখ্যা ১ &nbsp;•&nbsp; পৃষ্ঠা ২</span>
+  </div>
+
+  <div class="content-grid">
+
+    <!-- POEM CARD -->
+    <!-- EDIT: replace the lines below with a new poem -->
+    <article class="card poem-card">
+      <div class="badge-icon" style="background:var(--sun);">
+        <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 2l2.9 7.1L22 10l-5.5 4.9L18 22l-6-3.9L6 22l1.5-7.1L2 10l7.1-.9L12 2z" fill="#fff" stroke="var(--ink)" stroke-width="1.2"/></svg>
+      </div>
+      <h2>তৰাৰ কবিতা</h2>
+      <p class="poem-line">ৰাতিৰ আকাশত জিলিকে তৰা,</p>
+      <p class="poem-line">কোৱে সিহঁতে সপোনৰ কথা।</p>
+      <p class="poem-line">সৰু সৰু চকুৱে চাই থাকে ওপৰলৈ,</p>
+      <p class="poem-line">এখন ডাঙৰ সপোন গঢ়ি লয় হিয়াতে।</p>
+      <p class="poem-line">তৰাৰ দৰেই তুমিও উজলিবা,</p>
+      <p class="poem-line">নিজৰ পথত নিজেই চিকমিকিবা।</p>
+    </article>
+
+    <!-- STORY CARD -->
+    <!-- EDIT: replace with a new short story -->
+    <article class="card story-card">
+      <div class="badge-icon" style="background:var(--sky);">
+        <svg width="24" height="24" viewBox="0 0 24 24"><ellipse cx="12" cy="14" rx="9" ry="5" fill="#fff" stroke="var(--ink)" stroke-width="1.2"/><ellipse cx="12" cy="9" rx="6" ry="4" fill="#fff" stroke="var(--ink)" stroke-width="1.2"/></svg>
+      </div>
+      <h2>সাহসী কচ্ছপৰ গল্প</h2>
+      <p>এটা সৰু কচ্ছপৰ সপোন আছিল পাহাৰৰ টিঙলৈ যোৱাৰ। সকলোৱে কৈছিল, "তই ইমান লাহে লাহে, নোৱাৰিবি!" কিন্তু কচ্ছপটোৱে প্ৰতিদিনে অলপ অলপকৈ আগবাঢ়ি গৈছিল। এদিন ৰ'দৰ পুৱাতে, সি টিঙত উঠি সূৰ্য্যোদয় চাই হাঁহি দিলে — লাহে লাহে গ'লেও, সপোন সঁচা হ'ল।</p>
+    </article>
+  </div>
+
+  <div class="fun-row">
+    <!-- FACT BUBBLE -->
+    <!-- EDIT: swap for a new fun fact -->
+    <div class="card fact-bubble">
+      <div class="badge-icon" style="background:var(--paper);">
+        <svg width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#fff" stroke="var(--ink)" stroke-width="1.2"/><text x="12" y="17" font-size="13" text-anchor="middle" fill="var(--ink)" font-family="Baloo 2, sans-serif" font-weight="700">?</text></svg>
+      </div>
+      <h2>জানো নে তুমি?</h2>
+      <p>জিৰাফৰ ডিঙি দীঘল হ'লেও, তাৰ ভিতৰত মানুহৰ দৰেই মাত্ৰ সাতোটা হাড় থাকে! আৰু পখিলাই ভৰি দিয়েই সোৱাদ চাব পাৰে।</p>
+    </div>
+
+    <!-- DRAW YOUR DREAM ACTIVITY -->
+    <!-- EDIT: change the prompt text below -->
+    <div class="card draw-box">
+      <div class="badge-icon" style="background:var(--paper);">
+        <svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 20l3-1 11-11-2-2L5 17l-1 3z" fill="#fff" stroke="var(--ink)" stroke-width="1.2"/></svg>
+      </div>
+      <h2>তোমাৰ সপোন আঁকা</h2>
+      <p>তুমি ডাঙৰ হৈ কি হ'ব বিচাৰা? তাৰ এখন ছবি ইয়াত আঁকা!</p>
+      <div class="draw-frame"></div>
+    </div>
+  </div>
+
+  <!-- ANIMAL PARADE STRIP -->
+  <div class="animal-strip">
+    <div class="animal-slot">
+      <!-- CAT -->
+      <svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 85 Q15 40 50 40 Q85 40 80 85Z" fill="var(--coral)" stroke="var(--ink)" stroke-width="3"/>
+        <path d="M22 45 L10 20 L32 38Z" fill="var(--coral)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M78 45 L90 20 L68 38Z" fill="var(--coral)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="38" cy="58" r="3.5" fill="var(--ink)"/>
+        <circle cx="62" cy="58" r="3.5" fill="var(--ink)"/>
+        <path d="M44 68 Q50 73 56 68" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="animal-slot">
+      <!-- BIRD -->
+      <svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="50" cy="55" rx="32" ry="26" fill="var(--sun)" stroke="var(--ink)" stroke-width="3"/>
+        <circle cx="72" cy="40" r="16" fill="var(--sun)" stroke="var(--ink)" stroke-width="3"/>
+        <path d="M86 40 L98 36 L88 48Z" fill="var(--coral)" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>
+        <circle cx="76" cy="35" r="2.6" fill="var(--ink)"/>
+        <path d="M25 60 Q5 55 10 72 Q22 74 30 65" fill="var(--sky)" stroke="var(--ink)" stroke-width="2.5"/>
+      </svg>
+    </div>
+    <div class="animal-slot">
+      <!-- GIRAFFE -->
+      <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+        <rect x="44" y="10" width="14" height="55" rx="6" fill="var(--sun)" stroke="var(--ink)" stroke-width="3"/>
+        <ellipse cx="51" cy="12" rx="18" ry="14" fill="var(--sun)" stroke="var(--ink)" stroke-width="3"/>
+        <circle cx="44" cy="10" r="3" fill="var(--ink)"/>
+        <line x1="44" y1="0" x2="44" y2="6" stroke="var(--ink)" stroke-width="2.5"/>
+        <line x1="58" y1="0" x2="58" y2="6" stroke="var(--ink)" stroke-width="2.5"/>
+        <circle cx="44" cy="0" r="3" fill="var(--coral)" stroke="var(--ink)" stroke-width="1.5"/>
+        <circle cx="58" cy="0" r="3" fill="var(--coral)" stroke="var(--ink)" stroke-width="1.5"/>
+        <ellipse cx="30" cy="90" rx="26" ry="22" fill="var(--sun)" stroke="var(--ink)" stroke-width="3"/>
+        <circle cx="56" cy="12" r="2.2" fill="var(--ink)"/>
+        <circle cx="20" cy="82" r="4" fill="var(--coral)"/>
+        <circle cx="38" cy="95" r="4" fill="var(--coral)"/>
+      </svg>
+    </div>
+    <div class="animal-slot">
+      <!-- BUTTERFLY 2 -->
+      <svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(50,45)">
+          <path d="M0 0 C-28 -34 -50 -10 -28 6 C-50 22 -28 44 0 16" fill="var(--lavender)" stroke="var(--ink)" stroke-width="3"/>
+          <path d="M0 0 C28 -34 50 -10 28 6 C50 22 28 44 0 16" fill="var(--mint)" stroke="var(--ink)" stroke-width="3"/>
+          <line x1="0" y1="-6" x2="0" y2="20" stroke="var(--ink)" stroke-width="3"/>
+        </g>
+      </svg>
+    </div>
+    <div class="animal-slot">
+      <!-- ELEPHANT SMALL -->
+      <svg viewBox="0 0 110 90" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 40 Q0 10 35 5 Q80 -5 95 30 Q100 55 85 75 L85 90 L70 90 L70 78 L30 78 L30 90 L15 90 L15 72 Q0 60 10 40 Z"
+              fill="var(--sky)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M10 45 Q-14 55 -10 82 Q-6 92 4 88 Q0 65 12 55" fill="var(--sky)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="70" cy="28" r="4.5" fill="var(--ink)"/>
+        <ellipse cx="88" cy="34" rx="14" ry="10" fill="#fff" stroke="var(--ink)" stroke-width="2.5"/>
+      </svg>
+    </div>
+  </div>
+
+  <p class="p2-footer">পৰৱৰ্তী সংখ্যাত পুনৰ লগ পাম — নতুন কবিতা, নতুন গল্প আৰু নতুন সপোনৰ সৈতে! 🌈</p>
+</section>
+
+</body>
+</html>
